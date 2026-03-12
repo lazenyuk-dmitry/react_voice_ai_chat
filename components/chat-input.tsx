@@ -12,6 +12,7 @@ import { useAudioTranscribe } from "@/hooks/use-audio-transcribe";
 import { InputGroup, InputGroupAddon, InputGroupButton } from "./ui/input-group";
 import TextareaAutosize from 'react-textarea-autosize'
 import { Spinner } from "./ui/spinner";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
   onSend,
@@ -69,7 +70,27 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
           onTouchEnd={handleStopRecord}
           disabled={isLoading}
         >
-          {audioProcessed ? <Spinner className="size-10"/> : <Mic className="size-10"/>}
+          <AnimatePresence mode="wait">
+            {audioProcessed ? (
+              <motion.div
+                key="spinner"
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Loader2 className="size-10 animate-spin text-blue-500" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="mic"
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Mic className="size-10 text-blue-500" />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </InputGroupButton>
       </InputGroupAddon>
 
@@ -78,7 +99,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
         minRows={1}
         maxRows={3}
         placeholder="Ask whatever you want"
-        disabled={isLoading}
+        disabled={isLoading || audioProcessed}
         value={text}
         onChange={e => setText(e.target.value)}
       >
@@ -88,7 +109,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
         <InputGroupButton
           className="bg-blue-600 hover:bg-blue-500 text-white hover:text-white rounded-xl h-full size-18 my-0"
           onClick={() => handleSend(text)}
-          disabled={isLoading}
+          disabled={isLoading || audioProcessed}
         >
           <Send className="size-10"/>
         </InputGroupButton>

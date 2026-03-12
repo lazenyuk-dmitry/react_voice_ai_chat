@@ -4,13 +4,17 @@ import { SquareUser, BotMessageSquare } from "lucide-react";
 import { Item, ItemContent, ItemDescription, ItemGroup, ItemMedia } from "./ui/item";
 import { ChatDialogProps } from "./chat-dialog.types";
 import { ChatMessage, MessageRole } from "@/types";
+import { TypingIndicator } from "./ui/typing-indicator";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function ChatDialog({
     className,
+    isLoading = false,
     messages = [],
 }: ChatDialogProps) {
     const calcItemClassName = (role: MessageRole) => {
-        const defaultClasses = "shadow-sm"
+        const defaultClasses = "shadow-sm w-full shrink-0 bg-blue-600 text-white"
         if (role === MessageRole.ASSISTANT) {
             return `${defaultClasses} max-w-9/10 bg-indigo-600`
         }
@@ -26,20 +30,45 @@ export default function ChatDialog({
     }
 
     return (
-        <>
-            <ItemGroup className={"h-full gap-8 flex-col-reverse p-1 flex-auto w-full overflow-auto " + className}>
+        <div className={"flex h-full gap-8 flex-col-reverse p-1 flex-auto w-full overflow-auto " + className}>
+
+        <AnimatePresence mode="popLayout">
+			{ isLoading && (
+				<motion.div
+					key="typing"
+					initial={{ opacity: 1 }}
+					exit={{ opacity: 0 }}
+					transition={{ duration: 0.3 }}
+					>
+					<TypingIndicator/>
+				</motion.div>
+			)}
+
             {[...messages].reverse().map((message, index) => (
-                <Item className={calcItemClassName(message.role)} variant="default" size="default" key={index}>
-                    <ItemMedia variant="icon">
-                        {getIcon(message.role)}
-                    </ItemMedia>
-                    <ItemContent>
-                        {/* <ItemTitle>Title</ItemTitle> */}
-                        <ItemDescription className="text-lg">{message.content}</ItemDescription>
-                    </ItemContent>
-                </Item>
+                <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 0, scale: 1 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1, transition: { duration: 0.2 } }}
+                    // transition={{
+                    //     // type: "spring",
+                    //     stiffness: 260,
+                    //     damping: 20,
+                    //     delay: index * 0.1
+                    // }}
+                    // layout
+                >
+                    <Card className={calcItemClassName(message.role)} key={index}>
+                        <CardHeader>
+                            <CardTitle>{getIcon(message.role)}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-lg">
+                            <p>{message.content}</p>
+                        </CardContent>
+                    </Card>
+                </motion.div>
             ))}
-            </ItemGroup>
-        </>
+        </AnimatePresence>
+        </div>
     )
 }
