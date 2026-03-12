@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ApiError } from "./errors";
+import { HttpError } from "@/types";
 
 export const withApiErrorHandle = (handler) => async (req, resp) => {
     try {
@@ -10,9 +11,17 @@ export const withApiErrorHandle = (handler) => async (req, resp) => {
                 status: error.status,
                 errorCode: error.errCode,
                 message: error.message,
+            }, {
+                status: error.status,
             })
         }
 
-        throw error;
+        return NextResponse.json({
+            status: 500,
+            errorCode: HttpError.INTERNAL_ERROR,
+            message: "Internal server error",
+        }, {
+            status: 500,
+        })
     }
 }
