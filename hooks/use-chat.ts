@@ -1,24 +1,20 @@
-'use client'
-
 import { useState, useCallback, useRef } from 'react'
-import { useLocalStorage } from './useLocalStorage'
-import { ChatMessage, Message } from '@/types/chat'
+import { ChatMessage } from '@/types/chat'
 import { HttpClient } from '@/lib/http-client'
 import { MessageRole } from '@/types'
 
-const MAX_CONTEXT_MESSAGES = 10
-const WELCOME_MESSAGE: Message = {
-  id: 'welcome',
-  role: 'assistant',
-  content: 'Hi there! What would you like to know?',
-  timestamp: new Date()
-}
+// const MAX_CONTEXT_MESSAGES = 10
+// const WELCOME_MESSAGE: Message = {
+//   id: 'welcome',
+//   role: 'assistant',
+//   content: 'Hi there! What would you like to know?',
+//   timestamp: new Date()
+// }
 
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
   const http = new HttpClient()
 
 

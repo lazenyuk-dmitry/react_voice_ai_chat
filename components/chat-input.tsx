@@ -1,42 +1,99 @@
 "use client"
 
-import { useState } from "react";
-import { Mic, Send, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useChat } from "@/hooks/use-chat";
-import { ChatInputProps } from "./chat-input.types";
+import { forwardRef, useImperativeHandle, useState } from "react";
+import { Mic, Send, Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useChat } from "@/hooks/use-chat"
+import { ChatInputProps, ChatInputRef } from "./chat-input.types"
+import { useMediaRecorder } from "@/hooks/use-media-recorder"
+import { cn } from "@/lib/utils";
+import { useAudioTranscribe } from "@/hooks/use-audio-transcribe";
+import { InputGroup, InputGroupAddon, InputGroupButton } from "./ui/input-group";
+import TextareaAutosize from 'react-textarea-autosize'
+import { Spinner } from "./ui/spinner";
 
-export default function ChatInput({
+export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
   onSend,
+  onStartRecord,
+  onStopRecord,
   isLoading = false,
-}: ChatInputProps) {
-  const [text, setText] = useState("");
+}, ref) {
+  const [ text, setText ] = useState("")
+  const { isRecording, startRecording, stopRecording } = useMediaRecorder()
+  const { isLoading: audioProcessed, transcribeAudio } = useAudioTranscribe()
 
-  const handleSend = async () => {
-    await onSend(text);
+  useImperativeHandle(ref, () => ({
+    clearText: () => setText(""),
+    focus: () => {
+      const textarea = document.querySelector('textarea')
+      textarea?.focus()
+    },
+    setText: (newText: string) => setText(newText)
+  }))
+
+  const handleSend = (text: string) => {
+    onSend?.(text)
+  }
+
+  const handleStartRecord = () => {
+    startRecording()
+    onStartRecord?.()
+  }
+
+  const handleStopRecord = async () => {
+    const file = await stopRecording()
+
+    if (file) {
+      const text = await transcribeAudio(file)
+      onStopRecord?.(file)
+      setText(text)
+      handleSend(text)
+    }
   }
 
   return (
-    <div className="flex items-center bg-[#0a3a8c] rounded-2xl border border-blue-400/20 px-4 py-3 shadow-2xl focus-within:ring-1 focus-within:ring-blue-400/50 transition-all">
-      <Button variant="ghost" size="icon" className="text-blue-300 hover:bg-transparent rounded">
-        <Mic className="h-4 w-4" />
-      </Button>
+    <InputGroup
+      className="bg-[#0a3a8c] rounded-xl border border-blue-400/20 p-0 shadow-2xl focus-within:ring-1 focus-within:ring-blue-400/50 transition-all"
+    >
+      <InputGroupAddon className="py-0 pl-1">
+        <InputGroupButton
+          className={cn(
+            "text-blue-300 transition-all duration-20 rounded-xl size-18 my-0",
+            isRecording && "text-red-500 animate-pulse shadow-2xl",
+            isLoading && "opacity-50 grayscale"
+          )}
+          onMouseDown={handleStartRecord}
+          onMouseUp={handleStopRecord}
+          onTouchStart={handleStartRecord}
+          onTouchEnd={handleStopRecord}
+          disabled={isLoading}
+        >
+          {audioProcessed ? <Spinner className="size-10"/> : <Mic className="size-10"/>}
+        </InputGroupButton>
+      </InputGroupAddon>
 
-      <Input
-        className="bg-transparent border-none text-white text-lg placeholder:text-blue-300/40 focus-visible:ring-0 shadow-none"
+      <TextareaAutosize
+        className="flex field-sizing-content w-full resize-none rounded-md bg-transparent text-white text-xl px-2 py-2.5 transition-[color,box-shadow] outline-none"
+        minRows={1}
+        maxRows={3}
         placeholder="Ask whatever you want"
-        type="text"
+        disabled={isLoading}
         value={text}
         onChange={e => setText(e.target.value)}
-      />
-
-      <Button
-        className="bg-[#1e56c5] hover:bg-[#2563eb] rounded-xl h-12 w-12 ml-2"
-        onClick={handleSend}
       >
-        <Send />
-      </Button>
-    </div>
+      </TextareaAutosize>
+
+      <InputGroupAddon className="py-0 pr-1" align="inline-end">
+        <InputGroupButton
+          className="bg-blue-600 hover:bg-blue-500 text-white hover:text-white rounded-xl h-full size-18 my-0"
+          onClick={() => handleSend(text)}
+          disabled={isLoading}
+        >
+          <Send className="size-10"/>
+        </InputGroupButton>
+      </InputGroupAddon>
+
+    </InputGroup>
   );
-}
+})

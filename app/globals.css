@@ -129,4 +129,23 @@
   html {
     @apply font-inter;
   }
+
+  ::-webkit-scrollbar {
+    @apply w-2  rounded-xl;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    @apply bg-blue-600 rounded-xl;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    @apply bg-blue-800 dark:bg-gray-500 rounded-xl;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-blue-800 dark:bg-gray-400;
+  }
 }

@@ -3,13 +3,19 @@
 import { useChat } from "@/hooks/use-chat";
 import ChatInput from "@/components/chat-input";
 import { BotMessageSquare } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ChatDialog from "@/components/chat-dialog";
+import { useMediaRecorder } from "@/hooks/use-media-recorder";
+import { ChatInputRef } from "@/components/chat-input.types";
 
 export default function Page() {
-  const [text, setText] = useState("");
+  const inputRef = useRef<ChatInputRef>(null)
   const { messages, isLoading, sendMessage, hasMessages } = useChat();
 
+  const handleSend = async (text: string) => {
+    await sendMessage(text)
+    inputRef.current?.clearText()
+  }
 
   return (
     <main className="flex w-full min-h-0 flex-col items-start grow bg-[#002b6b] p-6 md:p-24 font-sans overflow-auto">
@@ -42,13 +48,11 @@ export default function Page() {
           </div>
         )}
 
-
-
         <ChatDialog className="flex-auto max-w-4xl" messages={messages}/>
 
         {/* Компонент ввода */}
         <div className="w-full max-w-3xl mt-auto">
-          <ChatInput isLoading={isLoading} onSend={sendMessage}/>
+          <ChatInput ref={inputRef} isLoading={isLoading} onSend={handleSend}/>
         </div>
       </div>
     </main>
