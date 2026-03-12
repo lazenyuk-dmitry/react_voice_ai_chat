@@ -1,7 +1,15 @@
+"use client"
+
+import { useChat } from "@/hooks/use-chat";
 import ChatInput from "@/components/chat-input";
 import { BotMessageSquare } from "lucide-react";
+import { useState } from "react";
 
 export default function Page() {
+  const [text, setText] = useState("");
+  const { messages, isLoading, sendMessage } = useChat();
+
+
   return (
     <main className="flex min-h-screen flex-col items-start justify-center bg-[#002b6b] p-6 md:p-24 font-sans">
       <div className="w-full max-w-3xl space-y-10">
@@ -29,9 +37,13 @@ export default function Page() {
           </div>
         </div>
 
+        {messages.map((message, index) => (
+          <div key={index}>{message.content}</div>
+        ))}
+
         {/* Компонент ввода */}
         <div className="w-full max-w-2xl pt-4">
-          <ChatInput />
+          <ChatInput isLoading={isLoading} onSend={sendMessage}/>
         </div>
       </div>
     </main>
