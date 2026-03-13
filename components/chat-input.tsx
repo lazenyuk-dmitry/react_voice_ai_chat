@@ -1,10 +1,7 @@
 "use client"
 
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { Mic, Send, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { useChat } from "@/hooks/use-chat"
+import { Mic, Send } from "lucide-react"
 import { ChatInputProps, ChatInputRef } from "./chat-input.types"
 import { useMediaRecorder } from "@/hooks/use-media-recorder"
 import { cn } from "@/lib/utils";
@@ -53,6 +50,15 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
     }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.nativeEvent.isComposing) return;
+
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend(text);
+    }
+  }
+
   return (
     <InputGroup
       className="bg-[#0a3a8c] rounded-xl border border-blue-400/20 p-0 shadow-2xl focus-within:ring-1 focus-within:ring-blue-400/50 transition-all"
@@ -78,7 +84,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Loader2 className="size-10 animate-spin text-blue-500" />
+                <Spinner className="size-10 animate-spin text-blue-500" />
               </motion.div>
             ) : (
               <motion.div
@@ -102,6 +108,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
         disabled={isLoading || audioProcessed}
         value={text}
         onChange={e => setText(e.target.value)}
+        onKeyDown={handleKeyDown}
       >
       </TextareaAutosize>
 

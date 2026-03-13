@@ -1,22 +1,21 @@
 import { useState, useCallback, useRef } from 'react'
 import { ChatMessage } from '@/types/chat'
-import { HttpClient } from '@/lib/http-client'
+import * as api from "@/services/api.service";
 import { MessageRole } from '@/types'
 
-// const MAX_CONTEXT_MESSAGES = 10
-// const WELCOME_MESSAGE: Message = {
-//   id: 'welcome',
-//   role: 'assistant',
-//   content: 'Hi there! What would you like to know?',
-//   timestamp: new Date()
-// }
+const MAX_CONTEXT_MESSAGES = 10
+const SYSTEM_PROMPT: ChatMessage = {
+  role: MessageRole.SYSTEM,
+  content: `
+    You are a friendly assistant. 
+    If possible, respond in the user's language.
+    Be polite.
+  `,
+}
 
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const http = new HttpClient()
-
 
   const sendMessage = async (text: string) => {
     if (!text.trim()) return;
@@ -30,15 +29,13 @@ export function useChat() {
     setMessages(prev => [...prev, newUserMessage])
 
     try {
-      const response = await http.post("/chat", {
-        messages: [...messages, newUserMessage]
-      });
-
-      const { message: receivedMessage } = await response.json();
-
+      const { message: receivedMessage } = await api.sendMessage(
+        [SYSTEM_PROMPT, ...messages.slice(-MAX_CONTEXT_MESSAGES), newUserMessage]
+      );
       setMessages(prev => [...prev, receivedMessage])
-    } catch (error) {
-      console.error("Ошибка:", error);
+    } catch (e: unknown) {
+      setMessages(prev => prev.slice(0, -1))
+      throw e
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +44,6 @@ export function useChat() {
   return {
     messages,
     isLoading,
-    error,
     sendMessage,
     hasMessages: messages.length > 1
   }

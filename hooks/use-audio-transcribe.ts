@@ -1,22 +1,14 @@
-import { HttpClient } from "@/lib/http-client";
+import * as api from "@/services/api.service";
 import { useState } from "react";
 
 export const useAudioTranscribe = () => {
     const [audioText, setAudioText] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false)
-    const http = new HttpClient()
 
-    const transcribeAudio = async (blob: Blob) => {
-        const formData = new FormData();
-
+    const sendAudio = async (blob: Blob) => {
         setIsLoading(true)
-        formData.append('file', blob, 'audio.m4a');
 
-        const response = await http.postAsFormData("/transcribe", formData, {
-            headers: {},
-        });
-
-        const { text } = await response.json()
+        const { text } = await api.transcribeAudio(blob);
 
         setAudioText(text)
         setIsLoading(false)
@@ -27,6 +19,6 @@ export const useAudioTranscribe = () => {
     return {
         audioText,
         isLoading,
-        transcribeAudio,
+        transcribeAudio: sendAudio,
     }
 }

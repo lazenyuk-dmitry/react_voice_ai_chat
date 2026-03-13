@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} antialiased h-screen`}>
       <body className="h-screen flex flex-col">
         {children}
+        <Toaster position="top-right" reverseOrder={false} />
       </body>
     </html>
   );
