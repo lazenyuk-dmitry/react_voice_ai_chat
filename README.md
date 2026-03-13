@@ -41,8 +41,8 @@ DEMO HERE: https://react-voice-ai-chat.vercel.app/
 ### 1. Клонирование репозитория
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/lazenyuk-dmitry/react_voice_ai_chat.git
+cd react_voice_ai_chat
 ```
 
 ### 2. Установка зависимостей
