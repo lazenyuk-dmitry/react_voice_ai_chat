@@ -20,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} antialiased h-screen`}>
-      <body className="h-screen flex flex-col">
+    <html lang="en" className={`${inter.variable} antialiased h-dvh`}>
+      <body className="h-dvh flex flex-col">
         {children}
         <Toaster position="top-right" reverseOrder={false} />
       </body>
