@@ -7,10 +7,12 @@ import { useRef } from "react";
 import ChatDialog from "@/components/chat-dialog";
 import { ChatInputRef } from "@/components/chat-input.types";
 import { AnimatePresence, motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function Page() {
   const inputRef = useRef<ChatInputRef>(null)
-  const { messages, isLoading, sendMessage, hasMessages } = useChat();
+  const { messages, isLoading, sendMessage, hasMessages, newDialog } = useChat();
 
   const handleSend = async (text: string) => {
     await sendMessage(text)
@@ -21,19 +23,44 @@ export default function Page() {
     <main className="flex w-full min-h-0 flex-col items-start grow bg-[#002b6b] p-6 md:p-24 font-sans overflow-auto">
       <div className="flex w-full grow flex-col items-start min-h-0 space-y-10">
         <AnimatePresence mode="popLayout">
-          { !hasMessages && (
-            <motion.div
-                key="placeholderInfo"
+
+          <div className="flex items-center gap-6 mb-7">
+            <div className="bg-[#1e4ba3] p-3 rounded-xl shadow-lg">
+              <BotMessageSquare
+                className={
+                  cn(
+                    "text-white transition-all duration-500 ease-in-out",
+                    hasMessages ? "size-10" : "size-18",
+                  )
+                }
+              />
+            </div>
+            { hasMessages && (
+              <motion.div
+                key="newBtn"
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.5 }}
               >
-              <div className="flex mb-7">
-                <div className="bg-[#1e4ba3] p-3 rounded-xl shadow-lg">
-                  <BotMessageSquare className="text-white h-18 w-18"/>
-                </div>
-              </div>
+                <Button
+                  className="p-6 text-white"
+                  variant="destructive"
+                  onClick={newDialog}
+                  disabled={isLoading}
+                >
+                  New chat
+                </Button>
+              </motion.div>
+            )}
+          </div>
 
+          { !hasMessages && (
+            <motion.div
+              key="placeholderInfo"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
               <div className="space-y-6 text-white">
                 <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
                   Hi there!
