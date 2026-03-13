@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 Voice AI Chatbot
 
-## Getting Started
+Интеллектуальный чат-бот с поддержкой голосового ввода, построенный на базе Next.js 15, OpenAI/Llama 3 и Framer Motion.
+Проект ориентирован на высокую производительность, чистоту кода и отличный UX.
 
-First, run the development server:
+DEMO HERE: [](https://react-voice-ai-chat.vercel.app/)
+
+## 🌟 Основные возможности
+
+- Voice-to-Text: Транскрибация аудио в реальном времени (Whisper API).
+- AI Intelligence: Интеграция с Llama 3.1 через Groq/OpenAI SDK.
+- Optimistic UI: Мгновенное отображение сообщений в интерфейсе.
+- Persistence: Сохранение истории переписки в localStorage.
+- Modern UI: Адаптивный дизайн на Tailwind CSS с плавной анимацией.
+- Robust Architecture: Четкое разделение на слои (Services, Hooks, Lib, UI).
+
+## 🛠️ Технологический стек
+
+- Framework: Next.js 15 (App Router)
+- Language: TypeScript
+- Styling: Tailwind CSS + Shadcn UI
+- Animation: Framer Motion
+- State: Custom Hooks & Local Storage
+- API: OpenAI SDK (Llama 3.1 model)
+
+## 📁 Структура проекта
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+├── app/api/      # API Route Handlers (Backend)
+├── components/   # Бизнес-компоненты
+│   └── ui/       # Атомарные UI-компоненты (Shadcn)
+├── hooks/        # Кастомные React хуки (useChat, useMedia, и т.д.)
+├── services/     # Слой бизнес-логики (API клиенты)
+├── lib/          # Утилиты и конфигурации (http-client, error-handler)
+└── types/        # Глобальные определения типов
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Быстрый старт
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. Клонирование репозитория
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+```
 
-## Learn More
+### 2. Установка зависимостей
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Настройте переменные окружения (скопируйте и переименуйте .env.example -> .env)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Можно создать копию командой в терминале
 
-## Deploy on Vercel
+```bash
+# Linux / macOS / Git Bash
+cp .env.example .env
+# В Windows (PowerShell)
+copy .env.example .env
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Фрагмент кода
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+OPENAI_API_KEY=your_api_key_here # Only GROG https://console.groq.com/keys
+```
+
+### 4. Запуск
+
+```bash
+# for develop
+npm run dev
+# or for build production
+npm run build
+```
+
+## 🛡 Безопасность и архитектура
+
+- Использование HOF (Higher-Order Functions) для централизованной обработки ошибок в API.
+- Строгая типизация всех ответов сервера через Generics.
+- Разделение ответственности между клиентской и серверной частями.
