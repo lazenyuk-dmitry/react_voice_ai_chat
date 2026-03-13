@@ -3,8 +3,9 @@
 import { SquareUser, BotMessageSquare } from "lucide-react";
 import { ChatDialogProps } from "./chat-dialog.types";
 import { MessageRole } from "@/types";
-import { Card, CardContent, CardHeader, CardTitle, TypingIndicator } from "./ui";
+import { Card, CardAction, CardContent, CardHeader, CardTitle, TypingIndicator } from "./ui";
 import { AnimatePresence, motion } from "framer-motion";
+import { formatMessageDate } from "@/lib/utils";
 
 export default function ChatDialog({
     className,
@@ -52,6 +53,9 @@ export default function ChatDialog({
                     <Card className={calcItemClassName(message.role)} key={message.id}>
                         <CardHeader>
                             <CardTitle>{getIcon(message.role)}</CardTitle>
+                            <CardAction>
+                                {formatMessageDate(message.date)}
+                            </CardAction>
                         </CardHeader>
                         <CardContent className="md:text-lg">
                             <p>{message.content}</p>

@@ -41,8 +41,13 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
     const file = await stopRecording()
 
     if (file) {
-      const text = await transcribeAudio(file)
-      onStopRecord?.(file)
+      let text = await transcribeAudio(file)
+
+      if (text.trim() === ".") {
+        text = ""
+      }
+
+      onStopRecord?.(text)
       setText(text)
       handleSend(text)
     }
