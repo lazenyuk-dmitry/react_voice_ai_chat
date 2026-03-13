@@ -48,19 +48,12 @@ export default function ChatDialog({
                     initial={{ opacity: 0, y: 0, scale: 1 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, scale: 1, transition: { duration: 0.2 } }}
-                    // transition={{
-                    //     // type: "spring",
-                    //     stiffness: 260,
-                    //     damping: 20,
-                    //     delay: index * 0.1
-                    // }}
-                    // layout
                 >
                     <Card className={calcItemClassName(message.role)} key={message.id}>
                         <CardHeader>
                             <CardTitle>{getIcon(message.role)}</CardTitle>
                         </CardHeader>
-                        <CardContent className="text-lg">
+                        <CardContent className="md:text-lg">
                             <p>{message.content}</p>
                         </CardContent>
                     </Card>

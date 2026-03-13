@@ -64,8 +64,8 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
       <InputGroupAddon className="py-0 pl-1">
         <InputGroupButton
           className={cn(
-            "text-blue-300 transition-all duration-20 rounded-xl size-18 my-0",
-            isRecording && "text-red-500 animate-pulse shadow-2xl",
+            "text-blue-300 transition-all duration-20 rounded-xl md:size-18 my-0",
+            isRecording && "bg-red-500! animate-pulse shadow-2xl",
             isLoading && "opacity-50 grayscale"
           )}
           onMouseDown={handleStartRecord}
@@ -83,7 +83,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Spinner className="size-10 animate-spin text-blue-500" />
+                <Spinner className="md:size-10 animate-spin text-blue-500" />
               </motion.div>
             ) : (
               <motion.div
@@ -92,7 +92,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Mic className="size-10 text-blue-500" />
+                <Mic className="md:size-10 size-8 text-blue-500" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -100,7 +100,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
       </InputGroupAddon>
 
       <TextareaAutosize
-        className="flex field-sizing-content w-full resize-none rounded-md bg-transparent text-white text-xl px-2 py-2.5 transition-[color,box-shadow] outline-none"
+        className="flex field-sizing-content w-full resize-none rounded-md bg-transparent text-white md:text-xl px-2 py-2.5 transition-[color,box-shadow] outline-none"
         minRows={1}
         maxRows={3}
         placeholder="Ask whatever you want"
@@ -113,11 +113,11 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
 
       <InputGroupAddon className="py-0 pr-1" align="inline-end">
         <InputGroupButton
-          className="bg-blue-600 hover:bg-blue-500 text-white hover:text-white rounded-xl h-full size-18 my-0"
+          className="bg-blue-600 hover:bg-blue-500 text-white hover:text-white rounded-xl h-full md:size-18 size-12 my-0"
           onClick={() => handleSend(text)}
           disabled={isLoading || audioProcessed}
         >
-          <Send className="size-10"/>
+          <Send className="md:size-10"/>
         </InputGroupButton>
       </InputGroupAddon>
 

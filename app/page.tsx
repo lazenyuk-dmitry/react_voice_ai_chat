@@ -20,7 +20,7 @@ export default function Page() {
   }
 
   return (
-    <main className="flex w-full min-h-0 flex-col items-start grow bg-[#002b6b] p-6 md:p-24 font-sans overflow-auto">
+    <main className="flex w-full min-h-0 flex-col items-start grow bg-[#002b6b] p-6 md:p-15 lg:p-20 xl:p-24 font-sans overflow-auto">
       <div className="flex w-full grow flex-col items-start min-h-0 space-y-10">
         <AnimatePresence mode="popLayout">
 
@@ -81,7 +81,9 @@ export default function Page() {
           )}
         </AnimatePresence>
 
-        <ChatDialog isLoading={isLoading} className="flex-auto max-w-4xl" messages={messages}/>
+        { hasMessages && (
+          <ChatDialog isLoading={isLoading} className="flex-auto max-w-4xl" messages={messages}/>
+        )}
 
         <div className="w-full max-w-3xl mt-auto">
           <ChatInput ref={inputRef} isLoading={isLoading} onSend={handleSend}/>
