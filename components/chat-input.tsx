@@ -69,7 +69,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
       <InputGroupAddon className="py-0 pl-1">
         <InputGroupButton
           className={cn(
-            "text-blue-300 transition-all duration-20 rounded-xl md:size-18 my-0",
+            "text-blue-300 transition-all duration-20 rounded-xl md:size-18 size-12 my-0",
             isRecording && "bg-red-500! animate-pulse shadow-2xl",
             isLoading && "opacity-50 grayscale"
           )}
