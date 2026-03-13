@@ -10,6 +10,13 @@ export const useMediaRecorder = () => {
   const mediaRecorder = useRef<MediaRecorder | null>(null);
 
   const startRecording = async () => {
+    const allowed = await checkPermissions();
+    if (!allowed) {
+      stopRecording();
+      await askPermissions();
+      return
+    }
+
     try {
       stream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder.current = new MediaRecorder(stream.current);
@@ -20,6 +27,7 @@ export const useMediaRecorder = () => {
       setIsRecording(true);
     } catch (err) {
       console.error("Доступ к микрофону запрещен", err);
+      throw err
     }
   };
 
@@ -36,6 +44,20 @@ export const useMediaRecorder = () => {
       setIsRecording(false);
     })
   };
+
+  const checkPermissions = async () => {
+    if (navigator.permissions && navigator.permissions.query) {
+      const permission = await navigator.permissions.query({ name: 'microphone' as PermissionName })
+      return permission.state === 'granted';
+    }
+
+    return true;
+  }
+
+  const askPermissions = async () => {
+    stream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+    cleanup();
+  }
 
   const cleanup = () => {
     if (stream.current) {
