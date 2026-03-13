@@ -1,6 +1,15 @@
-import { ChatMessage, HttpError } from '@/types'
-import { ApiError } from '@/lib/errors'
+import { BaseMessage, ChatMessage, HttpErrorCode, MessageRole } from '@/types'
+import { ApiError } from '@/lib/backend/errors'
 import OpenAI from 'openai'
+
+const SYSTEM_PROMPT: BaseMessage = {
+  role: MessageRole.SYSTEM,
+  content: `
+    You are a friendly assistant.
+    If possible, respond in the user's language.
+    Be polite.
+  `,
+}
 
 export class AiService {
     private openai: OpenAI
@@ -14,16 +23,20 @@ export class AiService {
 
     async sendMessage(messages: ChatMessage[]): Promise<ChatMessage> {
       if (!messages.length) {
-        throw new ApiError('Empty messages array', HttpError.BAD_REQUEST)
+        throw new ApiError('Empty messages array', HttpErrorCode.BAD_REQUEST)
       }
 
       try {
         const completion = await this.openai.chat.completions.create({
           model: "llama-3.1-8b-instant",
-          messages,
+          messages: [SYSTEM_PROMPT, ...messages],
         });
 
-        return completion.choices[0].message as ChatMessage;
+        return {
+          ...completion.choices[0].message,
+          id: crypto.randomUUID(),
+          date: new Date(),
+        } as ChatMessage;
 
       } catch (error: unknown) {
         this.handleErrors(error)
@@ -32,7 +45,7 @@ export class AiService {
 
     async transcribeAudio(file: File): Promise<string> {
       if (!file) {
-        throw new ApiError("No audio file provided", HttpError.BAD_REQUEST);
+        throw new ApiError("No audio file provided", HttpErrorCode.BAD_REQUEST);
       }
 
       try {
@@ -48,17 +61,18 @@ export class AiService {
       }
     }
 
-    handleErrors(error: unknown) {
+    handleErrors(error: unknown): never {
       if (error instanceof OpenAI.APIError) {
           switch (error.status) {
             case 401:
-              throw new ApiError('Invalid API key', HttpError.UNAUTHORIZED)
+              throw new ApiError('Invalid API key', HttpErrorCode.UNAUTHORIZED)
             case 429:
-              throw new ApiError('Too many requests', HttpError.TOO_MANY_REQUESTS)
+              throw new ApiError('Too many requests', HttpErrorCode.TOO_MANY_REQUESTS)
             default:
               throw new ApiError('OpenAI API error')
           }
         }
-        throw new ApiError('Неизвестная ошибка')
+
+        throw error
     }
 }

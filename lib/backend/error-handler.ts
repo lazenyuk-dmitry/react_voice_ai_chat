@@ -1,11 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ApiError } from "./errors";
-import { HttpError } from "@/types";
+import { HttpErrorCode } from "@/types";
 
-export const withApiErrorHandle = (handler) => async (req, resp) => {
+type RouteHandler<TContext = unknown> = (
+    req: NextRequest,
+    context: TContext
+) => Promise<NextResponse> | NextResponse;
+
+export const withApiErrorHandle = (handler: RouteHandler) => async (req: NextRequest, context: unknown) => {
     try {
-        return await handler(req, resp);
+        return await handler(req, context);
     } catch (error) {
+        console.error(error)
+
         if (error instanceof ApiError) {
             return NextResponse.json({
                 status: error.status,
@@ -18,7 +25,7 @@ export const withApiErrorHandle = (handler) => async (req, resp) => {
 
         return NextResponse.json({
             status: 500,
-            errorCode: HttpError.INTERNAL_ERROR,
+            errorCode: HttpErrorCode.INTERNAL_ERROR,
             message: "Internal server error",
         }, {
             status: 500,

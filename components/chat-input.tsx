@@ -3,12 +3,10 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { Mic, Send } from "lucide-react"
 import { ChatInputProps, ChatInputRef } from "./chat-input.types"
-import { useMediaRecorder } from "@/hooks/use-media-recorder"
+import { useMediaRecorder, useAudioTranscribe } from "@/hooks"
 import { cn } from "@/lib/utils";
-import { useAudioTranscribe } from "@/hooks/use-audio-transcribe";
-import { InputGroup, InputGroupAddon, InputGroupButton } from "./ui/input-group";
+import { InputGroup, InputGroupAddon, InputGroupButton, Spinner } from "./ui";
 import TextareaAutosize from 'react-textarea-autosize'
-import { Spinner } from "./ui/spinner";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
@@ -72,6 +70,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
           )}
           onMouseDown={handleStartRecord}
           onMouseUp={handleStopRecord}
+          onMouseLeave={handleStopRecord}
           onTouchStart={handleStartRecord}
           onTouchEnd={handleStopRecord}
           disabled={isLoading}

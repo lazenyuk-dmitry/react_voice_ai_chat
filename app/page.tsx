@@ -1,13 +1,13 @@
 "use client"
 
-import { useChat } from "@/hooks/use-chat";
+import { useChat } from "@/hooks";
 import ChatInput from "@/components/chat-input";
 import { BotMessageSquare } from "lucide-react";
 import { useRef } from "react";
 import ChatDialog from "@/components/chat-dialog";
 import { ChatInputRef } from "@/components/chat-input.types";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export default function Page() {

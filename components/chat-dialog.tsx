@@ -1,11 +1,9 @@
 "use client"
 
 import { SquareUser, BotMessageSquare } from "lucide-react";
-import { Item, ItemContent, ItemDescription, ItemGroup, ItemMedia } from "./ui/item";
 import { ChatDialogProps } from "./chat-dialog.types";
-import { ChatMessage, MessageRole } from "@/types";
-import { TypingIndicator } from "./ui/typing-indicator";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { MessageRole } from "@/types";
+import { Card, CardContent, CardHeader, CardTitle, TypingIndicator } from "./ui";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function ChatDialog({
@@ -44,9 +42,9 @@ export default function ChatDialog({
 				</motion.div>
 			)}
 
-            {[...messages].reverse().map((message, index) => (
+            {[...messages].reverse().map((message) => (
                 <motion.div
-                    key={index}
+                    key={message.id}
                     initial={{ opacity: 0, y: 0, scale: 1 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, scale: 1, transition: { duration: 0.2 } }}
@@ -58,7 +56,7 @@ export default function ChatDialog({
                     // }}
                     // layout
                 >
-                    <Card className={calcItemClassName(message.role)} key={index}>
+                    <Card className={calcItemClassName(message.role)} key={message.id}>
                         <CardHeader>
                             <CardTitle>{getIcon(message.role)}</CardTitle>
                         </CardHeader>

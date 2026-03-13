@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withApiErrorHandle } from '@/lib/error-handler'
+import { withApiErrorHandle } from '@/lib/backend/error-handler'
 import { SendMessageResponse } from './types'
 import { AiService } from '@/services/backend/ai.service'
 

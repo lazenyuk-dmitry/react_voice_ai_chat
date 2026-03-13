@@ -1,6 +1,6 @@
-import { MessageRole } from "./shared"
+import { BaseMessage } from "./shared"
 
-export interface ChatMessage {
-    role: MessageRole
-    content: string
+export interface ChatMessage extends BaseMessage {
+    id: string
+    date: Date
 }

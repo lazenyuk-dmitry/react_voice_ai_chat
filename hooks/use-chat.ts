@@ -6,14 +6,6 @@ import { useLocalStorageState } from './use-local-storage';
 
 const MAX_LOCAL_STORAGE = 50
 const MAX_CONTEXT_MESSAGES = 10
-const SYSTEM_PROMPT: ChatMessage = {
-  role: MessageRole.SYSTEM,
-  content: `
-    You are a friendly assistant.
-    If possible, respond in the user's language.
-    Be polite.
-  `,
-}
 
 export function useChat() {
   const [messages, setMessages, resetStorage] = useLocalStorageState<ChatMessage[]>('chat_history', [])
@@ -23,8 +15,10 @@ export function useChat() {
     if (!text.trim()) return;
 
     const newUserMessage = {
+      id: self.crypto.randomUUID(),
       role: MessageRole.USER,
       content: text.trim(),
+      date: new Date(),
     }
 
     setIsLoading(true);
@@ -32,7 +26,10 @@ export function useChat() {
 
     try {
       const { message: receivedMessage } = await api.sendMessage(
-        [SYSTEM_PROMPT, ...messages.slice(-MAX_CONTEXT_MESSAGES), newUserMessage]
+        [...messages.slice(-MAX_CONTEXT_MESSAGES), newUserMessage].map(m => ({
+          role: m.role,
+          content: m.content,
+        }))
       );
       setMessages(prev => [...prev, receivedMessage].slice(-MAX_LOCAL_STORAGE))
     } catch (e: unknown) {

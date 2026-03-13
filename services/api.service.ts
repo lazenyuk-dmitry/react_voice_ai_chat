@@ -1,8 +1,8 @@
 import { httpClient } from "@/lib/http-client"
-import { ChatMessage } from "@/types";
+import { BaseMessage } from "@/types";
 
 
-export async function sendMessage(messages: ChatMessage[]) {
+export async function sendMessage(messages: BaseMessage[]) {
   const response = await httpClient.post("/chat", {
     messages,
   });

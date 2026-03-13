@@ -21,7 +21,7 @@ class HttpClient {
         }
     }
 
-    async post(url: string, payload: any, config: any = {}) {
+    async post(url: string, payload: any, config: RequestInit = {}) {
         return await this.request(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -30,7 +30,7 @@ class HttpClient {
         });
     }
 
-    async postAsFormData(url: string, payload: any, config: any = {}) {
+    async postAsFormData(url: string, payload: any, config: RequestInit = {}) {
         return await this.request(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -50,6 +50,8 @@ class HttpClient {
                 color: '#fff',
             },
         });
+
+        console.log(error);
     }
 }
 

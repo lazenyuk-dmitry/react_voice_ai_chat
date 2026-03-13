@@ -1,9 +1,9 @@
-import { HttpError } from "@/types"
+import { HttpErrorCode } from "@/types"
 
 export class ApiError extends Error {
   constructor(
     message: string = 'Unknown Error',
-    public errCode: HttpError = HttpError.INTERNAL_ERROR,
+    public errCode: HttpErrorCode = HttpErrorCode.INTERNAL_ERROR,
     public status: number = errCode,
   ) {
     super(message)
