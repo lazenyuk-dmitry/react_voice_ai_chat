@@ -2,23 +2,23 @@ import * as api from "@/services/api.service";
 import { useState } from "react";
 
 export const useAudioTranscribe = () => {
-    const [audioText, setAudioText] = useState<string>("")
-    const [isLoading, setIsLoading] = useState(false)
+  const [audioText, setAudioText] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(false)
 
-    const sendAudio = async (blob: Blob) => {
-        setIsLoading(true)
+  const sendAudio = async (blob: Blob) => {
+    setIsLoading(true)
 
-        const { text } = await api.transcribeAudio(blob);
+    const { text } = await api.transcribeAudio(blob);
 
-        setAudioText(text)
-        setIsLoading(false)
+    setAudioText(text)
+    setIsLoading(false)
 
-        return text;
-    }
+    return text;
+  }
 
-    return {
-        audioText,
-        isLoading,
-        transcribeAudio: sendAudio,
-    }
+  return {
+    audioText,
+    isLoading,
+    transcribeAudio: sendAudio,
+  }
 }

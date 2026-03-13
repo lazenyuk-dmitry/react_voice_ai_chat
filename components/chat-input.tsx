@@ -15,7 +15,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
   onStopRecord,
   isLoading = false,
 }, ref) {
-  const [ text, setText ] = useState("")
+  const [text, setText] = useState("")
   const { isRecording, startRecording, stopRecording } = useMediaRecorder()
   const { isLoading: audioProcessed, transcribeAudio } = useAudioTranscribe()
 
@@ -122,7 +122,7 @@ export default forwardRef<ChatInputRef, ChatInputProps>(function ChatInput({
           onClick={() => handleSend(text)}
           disabled={isLoading || audioProcessed}
         >
-          <Send className="md:size-10"/>
+          <Send className="md:size-10" />
         </InputGroupButton>
       </InputGroupAddon>
 
